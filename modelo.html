@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crear Formulario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <STYLE>
+    .field-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+  </STYLE>
+</head>
+<body>
+  <div class="container">
+    <h1>Crear Formulario</h1>
+
+    <form action="" method="POST" id="formFields">
+      <!-- Resto del formulario -->
+
+      <div id="fieldsContainer">
+        <!-- Contenedor para los campos dinámicos -->
+      </div>
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFieldModal">Agregar Campo</button>
+      <button type="button" class="btn btn-danger" onclick="clearFields()">Limpiar Campos</button>
+
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+  </div>
+
+  <!-- Modal para agregar campo -->
+  <div class="modal fade" id="addFieldModal" tabindex="-1" aria-labelledby="addFieldModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addFieldModalLabel">Agregar Campo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="fieldType">Tipo de Campo</label>
+            <select name="fieldType" id="fieldType" class="form-select">
+              <option value="text">Texto</option>
+              <option value="number">Número</option>
+              <option value="date">Fecha</option>
+              <option value="checkbox">Checkbox</option>
+              <option value="select">Select</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="fieldLabel">Etiqueta del Campo</label>
+            <input type="text" name="fieldLabel" id="fieldLabel" class="form-control">
+          </div>
+          <div id="selectOptions" style="display: none;">
+            <label for="fieldOptions">Opciones del Select (separadas por comas)</label>
+            <input type="text" name="fieldOptions" id="fieldOptions" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="addField()">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+
+function addField() {
+  let fieldType = document.getElementById('fieldType').value;
+  let fieldLabel = document.getElementById('fieldLabel').value;
+
+  if (!fieldLabel) {
+    alert('Por favor, ingresa una etiqueta para el campo.');
+    return;
+  }
+
+  let field;
+
+  switch (fieldType) {
+    case 'text':
+    case 'number':
+    case 'date':
+      field = document.createElement('input');
+      field.type = fieldType;
+      field.classList.add('form-control');
+      break;
+    case 'checkbox':
+      field = document.createElement('input');
+      field.type = 'checkbox';
+      break;
+    case 'select':
+      field = document.createElement('select');
+      field.classList.add('form-control');
+      let options = document.getElementById('fieldOptions').value.split(',');
+      options.forEach(function (option) {
+        let selectOption = document.createElement('option');
+        selectOption.value = option.trim();
+        selectOption.text = option.trim();
+        field.appendChild(selectOption);
+      });
+      break;
+    default:
+      break;
+  }
+
+  let label = document.createElement('label');
+  label.innerHTML = fieldLabel;
+
+  const fieldsContainer = document.getElementById('fieldsContainer');
+  fieldsContainer.appendChild(label);
+  fieldsContainer.appendChild(field);
+  fieldsContainer.appendChild(document.createElement('br'));
+
+  document.getElementById('addFieldModal').hide();
+}
+
+function clearFields() {
+  const fieldsContainer = document.getElementById('fieldsContainer');
+  fieldsContainer.innerHTML = '';
+}
+
+
+</script>
+</body>
+</html>
